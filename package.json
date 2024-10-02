@@ -1,0 +1,24 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.11.6",
+        "@vitejs/plugin-react": "^4.3.2",
+        "axios": "^1.6.4",
+        "bootstrap": "^5.2.3",
+        "laravel-vite-plugin": "^1.0.0",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "sass": "^1.56.1",
+        "vite": "^5.4.8"
+    },
+    "dependencies": {
+        "@fortawesome/free-solid-svg-icons": "^6.6.0",
+        "@fortawesome/react-fontawesome": "^0.2.2"
+    }
+}
