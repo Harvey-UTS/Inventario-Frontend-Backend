@@ -1,69 +1,69 @@
 import React, { useState, useEffect } from 'react';
 import '../../../css/gestor_almacen.css';
-import Ventas_Activas from './gestor_activo.jsx';
-import Ventas_Inactivas from './gestor_inactivo.jsx';
+import Gestores_Activos from './gestor_activo.jsx';
+import Gestores_Inactivos from './gestor_inactivo.jsx';
 
 const Gestor_Ventas = () => {
-    const [ventas, setVentas] = useState([]);
+    const [gestores, setGestores] = useState([]);
     const [selectedSection, setSelectedSection] = useState(null);
     const [showForm, setShowForm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
-    const [currentVenta, setCurrentVenta] = useState(null);
+    const [currentGestor, setCurrentGestor] = useState(null);
     const [filters, setFilters] = useState({ nombre: '', apellido: '', email: '' });
 
     useEffect(() => {
-        const storedVentas = JSON.parse(localStorage.getItem('gestor_ventas'));
-        if (storedVentas) {
-            setVentas(storedVentas);
+        const storedGestores = JSON.parse(localStorage.getItem('gestor_ventas'));
+        if (storedGestores) {
+            setGestores(storedGestores);
         }
     }, []);
 
-    const handleSwitchChange = (venta) => {
-        const updatedVentas = ventas.map(v => 
-            v.id === venta.id ? { ...v, estado: v.estado === 'Activo' ? 'Inactivo' : 'Activo' } : v
+    const handleSwitchChange = (gestor) => {
+        const updatedGestores = gestores.map(g => 
+            g.id === gestor.id ? { ...g, estado: g.estado === 'Activo' ? 'Inactivo' : 'Activo' } : g
         );
-        setVentas(updatedVentas);
-        localStorage.setItem('gestor_ventas', JSON.stringify(updatedVentas));
+        setGestores(updatedGestores);
+        localStorage.setItem('gestor_ventas', JSON.stringify(updatedGestores));
     };
 
-    const handleNewVentaClick = () => {
+    const handleNewGestorClick = () => {
         setIsEditing(false);
-        setCurrentVenta(null);
+        setCurrentGestor(null);
         setShowForm(true);
     };
 
-    const handleEditVentaClick = (venta) => {
+    const handleEditGestorClick = (gestor) => {
         setIsEditing(true);
-        setCurrentVenta(venta);
+        setCurrentGestor(gestor);
         setShowForm(true);
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
-        const nuevaVenta = {
+        const nuevoGestor = {
             nombre: formData.get('nombre'),
             apellido: formData.get('apellido'),
             email: formData.get('email'),
             estado: formData.get('estado'),
         };
 
-        let updatedVentas;
+        let updatedGestores;
         if (isEditing) {
-            updatedVentas = ventas.map(v => 
-                v.id === currentVenta.id ? { ...nuevaVenta, id: currentVenta.id } : v // Asegúrate de mantener el ID al editar
+            updatedGestores = gestores.map(g => 
+                g.id === currentGestor.id ? { ...nuevoGestor, id: currentGestor.id } : g // Asegúrate de mantener el ID al editar
             );
         } else {
-            updatedVentas = [...ventas, { ...nuevaVenta, id: Date.now() }];
+            updatedGestores = [...gestores, { ...nuevoGestor, id: Date.now() }];
         }
 
-        setVentas(updatedVentas);
-        localStorage.setItem('gestor_ventas', JSON.stringify(updatedVentas));
+        setGestores(updatedGestores);
+        localStorage.setItem('gestor_ventas', JSON.stringify(updatedGestores));
         setShowForm(false);
     };
 
-    const filteredVentas = ventas.filter(venta => 
-        venta.nombre.toLowerCase().includes(filters.nombre.toLowerCase())
+    const filteredGestores = gestores.filter(gestor => 
+        gestor.nombre.toLowerCase().includes(filters.nombre.toLowerCase())
     );
 
     return (
@@ -73,14 +73,14 @@ const Gestor_Ventas = () => {
                     <div className="header">
                     <h2>Gestor de Ventas</h2>
                     </div>
-                    <button className="button" onClick={() => setSelectedSection('verVentas')}>
-                        Ver Ventas
+                    <button className="button" onClick={() => setSelectedSection('verGestores')}>
+                        Ver Gestores
                     </button>
-                    <button className="button" onClick={() => setSelectedSection('ventasActivas')}>
-                        Ventas Activas
+                    <button className="button" onClick={() => setSelectedSection('gestoresActivos')}>
+                        Gestores Activos
                     </button>
-                    <button className="button" onClick={() => setSelectedSection('ventasInactivas')}>
-                        Ventas Inactivas
+                    <button className="button" onClick={() => setSelectedSection('gestoresInactivos')}>
+                        Gestores Inactivos
                     </button>
                 </div>
             ) : (
@@ -88,11 +88,11 @@ const Gestor_Ventas = () => {
                     <div className="header">
                         <h2>Gestor de Ventas</h2>
                     </div>
-                    {selectedSection === 'verVentas' && 
-                    <div className="ventas-container">
+                    {selectedSection === 'verGestores' && 
+                    <div className="gestores-container">
                         {showForm ? (
-                            <div className="create-venta-form">
-                                <h2>{isEditing ? 'Editar Venta' : 'Crear Venta'}</h2><br />
+                            <div className="create-gestor-form">
+                                <h2>{isEditing ? 'Editar Gestor' : 'Crear Gestor'}</h2><br />
                                 <form onSubmit={handleSubmit}>
                                     <div className="form-row">
                                         <div className="form-group">
@@ -101,7 +101,7 @@ const Gestor_Ventas = () => {
                                                 type="text" 
                                                 name="nombre" 
                                                 required 
-                                                defaultValue={isEditing ? currentVenta.nombre : ''} 
+                                                defaultValue={isEditing ? currentGestor.nombre : ''} 
                                             />
                                         </div>
                                         <div className="form-group">
@@ -110,7 +110,7 @@ const Gestor_Ventas = () => {
                                                 type="text" 
                                                 name="apellido" 
                                                 required 
-                                                defaultValue={isEditing ? currentVenta.apellido : ''} 
+                                                defaultValue={isEditing ? currentGestor.apellido : ''} 
                                             />
                                         </div>
                                     </div>
@@ -121,12 +121,12 @@ const Gestor_Ventas = () => {
                                                 type="email" 
                                                 name="email" 
                                                 required 
-                                                defaultValue={isEditing ? currentVenta.email : ''} 
+                                                defaultValue={isEditing ? currentGestor.email : ''} 
                                             />
                                         </div>
                                         <div className="form-group">
                                             <label>Estado*</label>
-                                            <select name="estado" required defaultValue={isEditing ? currentVenta.estado : 'Activo'}>
+                                            <select name="estado" required defaultValue={isEditing ? currentGestor.estado : 'Activo'}>
                                                 <option value="Activo">Activo</option>
                                                 <option value="Inactivo">Inactivo</option>
                                             </select>
@@ -141,8 +141,8 @@ const Gestor_Ventas = () => {
                         ) : (
                             <>
                                 <div className="header">
-                                    <h2>Ventas</h2>
-                                    <button className="new-venta-button" onClick={handleNewVentaClick}>Nueva Venta</button>
+                                    <h2>Gestores</h2>
+                                    <button className="new-gestor-button" onClick={handleNewGestorClick}>Nuevo Gestor</button>
                                 </div>
                                 <div className="filters">
                                     <input
@@ -153,7 +153,7 @@ const Gestor_Ventas = () => {
                                         onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
                                     />
                                 </div>
-                                <table className="ventas-table">
+                                <table className="gestores-table">
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
@@ -164,14 +164,14 @@ const Gestor_Ventas = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredVentas.map((venta, index) => (
+                                        {filteredGestores.map((gestor, index) => (
                                             <tr key={index}>
-                                                <td>{venta.nombre}</td>
-                                                <td>{venta.apellido}</td>
-                                                <td>{venta.email}</td>
-                                                <td>{venta.estado}</td>
+                                                <td>{gestor.nombre}</td>
+                                                <td>{gestor.apellido}</td>
+                                                <td>{gestor.email}</td>
+                                                <td>{gestor.estado}</td>
                                                 <td>
-                                                    <button className="edit-button" onClick={() => handleEditVentaClick(venta)}>Editar</button>
+                                                    <button className="edit-button" onClick={() => handleEditGestorClick(gestor)}>Editar</button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -181,11 +181,11 @@ const Gestor_Ventas = () => {
                         )}
                     </div>
                     }
-                    {selectedSection === 'ventasActivas' && (
-                        <Ventas_Activas ventas={ventas.filter(v => v.estado === 'Activo')} handleSwitchChange={handleSwitchChange} />
+                    {selectedSection === 'gestoresActivos' && (
+                        <Gestores_Activos gestores={gestores.filter(g => g.estado === 'Activo')} handleSwitchChange={handleSwitchChange} />
                     )}
-                    {selectedSection === 'ventasInactivas' && (
-                        <Ventas_Inactivas ventas={ventas.filter(v => v.estado === 'Inactivo')} handleSwitchChange={handleSwitchChange} />
+                    {selectedSection === 'gestoresInactivos' && (
+                        <Gestores_Inactivos gestores={gestores.filter(g => g.estado === 'Inactivo')} handleSwitchChange={handleSwitchChange} />
                     )}
                 </div>
             )}
