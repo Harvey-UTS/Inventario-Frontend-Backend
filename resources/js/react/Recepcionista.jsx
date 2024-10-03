@@ -6,6 +6,9 @@ import Compras from '../components/compras.jsx';
 import Productos from '../components/productos.jsx';
 import Ventas from '../components/ventas.jsx';
 import Clientes from '../components/clientes.jsx';
+import Gestor_Almacen from '../components/gestor_almacen/gestor_almacen.jsx';
+import Gestor_Compras from '../components/gestor_compras/gestor_compras.jsx';
+import Gestor_Ventas from '../components/gestor_ventas/gestor_ventas.jsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBell, faUserCircle, faCaretDown } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
@@ -82,6 +85,9 @@ const Recepcionista = () => {
             <li onClick={() => setActiveContent('Productos')}>Productos</li>
             <li onClick={() => setActiveContent('Ventas')}>Ventas</li>
             <li onClick={() => setActiveContent('Clientes')}>Clientes</li>
+            <li onClick={() => setActiveContent('Gestor_Almacen')}>Gestor de Almacen</li>
+            <li onClick={() => setActiveContent('Gestor_Compras')}>Gestor de Compras</li>
+            <li onClick={() => setActiveContent('Gestor_Ventas')}>Gestor de Ventas</li>
           </strong>
         </ul>
       </nav>
@@ -101,6 +107,15 @@ const Recepcionista = () => {
         )}
         {activeContent === 'Clientes' && (
           <Clientes/>
+        )}
+        {activeContent === 'Gestor_Almacen' && (
+          <Gestor_Almacen/>
+        )}
+        {activeContent === 'Gestor_Compras' && (
+          <Gestor_Compras/>
+        )}
+        {activeContent === 'Gestor_Ventas' && (
+          <Gestor_Ventas/>
         )}
       </div>
     </div>
