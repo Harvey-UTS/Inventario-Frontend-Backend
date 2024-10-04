@@ -111,6 +111,7 @@ const Ventas = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="form-row">
                             <div className="form-group">
+                                <br />
                                 <label>Producto*</label>
                                 <select name="idProductos" value={formData.idProductos} onChange={handleInputChange} required>
                                     <option value="">Select an option</option>
@@ -120,6 +121,7 @@ const Ventas = () => {
                                 </select>
                             </div>
                             <div className="form-group">
+                                <br />
                                 <label>Cliente*</label>
                                 <select name="idClientes" value={formData.idClientes} onChange={handleInputChange} required>
                                     <option value="">Select an option</option>
@@ -199,7 +201,7 @@ const Ventas = () => {
                                     <td>{venta.soporte_de_compra || 'No disponible'}</td>
                                     <td>
                                         <button className="edit-button" onClick={() => handleEditClick(venta)}>Edit</button>
-                                        <button className="delete-button" onClick={() => handleDeleteClick(venta.id)}>Delete</button>
+                                        <button className="edit-button" onClick={() => handleDeleteClick(venta.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}

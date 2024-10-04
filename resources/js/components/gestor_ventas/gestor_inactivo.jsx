@@ -11,9 +11,6 @@ const Gestor_Inactivo = ({ gestores, handleSwitchChange }) => {
 
     return (
         <div className="gestores-cards">
-            <div className="header">
-                <h2>Gestores Ventas</h2>
-            </div>
             {gestores.map((gestor, index) => (
                 <div className="gestor-card" key={index}>
                     <h3>{gestor.nombre} {gestor.apellido}</h3>

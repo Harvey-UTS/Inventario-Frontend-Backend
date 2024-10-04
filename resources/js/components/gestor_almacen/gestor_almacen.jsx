@@ -38,6 +38,12 @@ const Gestor_Almacen = () => {
         setShowForm(true);
     };
 
+    const handleDeleteGestor = (gestorEmail) => {
+        const updatedGestores = gestores.filter(g => g.email !== gestorEmail);
+        setGestores(updatedGestores);
+        localStorage.setItem('gestores', JSON.stringify(updatedGestores));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -88,6 +94,9 @@ const Gestor_Almacen = () => {
                 <div className="content-section">
                     <div className="header">
                         <h2>Gestores Almacen</h2>
+                        <div className="button-container">
+                            <button className="new-gestor-button" onClick={() => setSelectedSection(null)}>Regresar</button>
+                        </div>
                     </div>
                     {selectedSection === 'verGestores' && 
                     <div className="gestores-container">
@@ -143,7 +152,10 @@ const Gestor_Almacen = () => {
                             <>
                                 <div className="header">
                                     <h2>Gestores Almacen</h2>
-                                    <button className="new-gestor-button" onClick={handleNewGestorClick}>Nuevo Gestor</button>
+                                    <div className="button-container">
+                                        <button className="new-gestor-button" onClick={() => setSelectedSection(null)}>Regresar</button>
+                                        <button className="new-gestor-button" onClick={handleNewGestorClick}>Nuevo Gestor</button>
+                                    </div>
                                 </div>
                                 <div className="filters">
                                     <input
@@ -172,8 +184,8 @@ const Gestor_Almacen = () => {
                                                 <td>{gestor.email}</td>
                                                 <td>{gestor.estado}</td>
                                                 <td>
-                                                    {/* Aquí aplicamos los estilos al botón de editar */}
                                                     <button className="edit-button" onClick={() => handleEditGestorClick(gestor)}>Editar</button>
+                                                    <button className="edit-button" onClick={() => handleDeleteGestor(gestor.email)}>Eliminar</button>
                                                 </td>
                                             </tr>
                                         ))}

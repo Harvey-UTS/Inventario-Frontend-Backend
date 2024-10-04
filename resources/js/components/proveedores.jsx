@@ -206,7 +206,7 @@ const Proveedores = () => {
                                     <td>{proveedor.telefono}</td>
                                     <td>
                                         <button className="edit-button" onClick={() => handleEditClick(proveedor)}>Edit</button>
-                                        <button className="delete-button" onClick={() => handleDelete(proveedor.id)}>Delete</button>
+                                        <button className="edit-button" onClick={() => handleDelete(proveedor.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}

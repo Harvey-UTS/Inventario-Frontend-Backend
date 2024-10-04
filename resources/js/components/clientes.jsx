@@ -203,7 +203,7 @@ const Clientes = () => {
                                     <td>{cliente.telefono}</td>
                                     <td>
                                         <button className="edit-button" onClick={() => handleEditClick(cliente)}>Edit</button>
-                                        <button className="delete-button" onClick={() => handleDelete(cliente.id)}>Delete</button>
+                                        <button className="edit-button" onClick={() => handleDelete(cliente.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}

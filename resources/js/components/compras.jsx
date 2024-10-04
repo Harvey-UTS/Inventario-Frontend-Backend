@@ -111,6 +111,7 @@ const Compras = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="form-row">
                             <div className="form-group">
+                                <br />
                                 <label>Producto*</label>
                                 <select name="idProductos" value={formData.idProductos} onChange={handleInputChange} required>
                                     <option value="">Select an option</option>
@@ -120,6 +121,7 @@ const Compras = () => {
                                 </select>
                             </div>
                             <div className="form-group">
+                                <br />
                                 <label>Proveedor*</label>
                                 <select name="idProveedores" value={formData.idProveedores} onChange={handleInputChange} required>
                                     <option value="">Select an option</option>
@@ -199,7 +201,7 @@ const Compras = () => {
                                     <td>{compra.soporte_de_compra}</td>
                                     <td>
                                         <button className="edit-button" onClick={() => handleEditClick(compra)}>Edit</button>
-                                        <button className="delete-button" onClick={() => handleDeleteClick(compra.id)}>Delete</button>
+                                        <button className="edit-button" onClick={() => handleDeleteClick(compra.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}
@@ -211,4 +213,4 @@ const Compras = () => {
     );
 };
 
-export default Compras;
+export default Compras;

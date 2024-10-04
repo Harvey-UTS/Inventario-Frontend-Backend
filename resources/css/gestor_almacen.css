@@ -58,6 +58,7 @@ p {
   padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+  margin:8px;
 }
 
 .new-gestor-button:hover {
@@ -115,9 +116,10 @@ p {
   background-color: #ffa000;
   color: #fff;
   border: none;
-  padding: 8px 12px;
+  padding: 10px 15px;
   border-radius: 5px;
   cursor: pointer;
+  margin-right: 15px; /* Espacio a la derecha del botón */
 }
 
 .edit-button:hover {

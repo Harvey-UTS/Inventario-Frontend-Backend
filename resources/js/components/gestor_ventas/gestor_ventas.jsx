@@ -20,7 +20,7 @@ const Gestor_Ventas = () => {
 
     const handleSwitchChange = (gestor) => {
         const updatedGestores = gestores.map(g => 
-            g.id === gestor.id ? { ...g, estado: g.estado === 'Activo' ? 'Inactivo' : 'Activo' } : g
+            g.email === gestor.email ? { ...g, estado: g.estado === 'Activo' ? 'Inactivo' : 'Activo' } : g
         );
         setGestores(updatedGestores);
         localStorage.setItem('gestor_ventas', JSON.stringify(updatedGestores));
@@ -38,6 +38,12 @@ const Gestor_Ventas = () => {
         setShowForm(true);
     };
 
+    const handleDeleteGestorClick = (gestorEmail) => {
+        const updatedGestores = gestores.filter(g => g.email !== gestorEmail);
+        setGestores(updatedGestores);
+        localStorage.setItem('gestor_ventas', JSON.stringify(updatedGestores));
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
@@ -51,7 +57,7 @@ const Gestor_Ventas = () => {
         let updatedGestores;
         if (isEditing) {
             updatedGestores = gestores.map(g => 
-                g.id === currentGestor.id ? { ...nuevoGestor, id: currentGestor.id } : g // Asegúrate de mantener el ID al editar
+                g.email === currentGestor.email ? { ...nuevoGestor, email: currentGestor.email } : g // Asegúrate de mantener el email al editar
             );
         } else {
             updatedGestores = [...gestores, { ...nuevoGestor, id: Date.now() }];
@@ -71,7 +77,7 @@ const Gestor_Ventas = () => {
             {selectedSection === null ? (
                 <div className="button-group">
                     <div className="header">
-                    <h2>Gestor de Ventas</h2>
+                        <h2>Gestor de Ventas</h2>
                     </div>
                     <button className="button" onClick={() => setSelectedSection('verGestores')}>
                         Ver Gestores
@@ -87,6 +93,9 @@ const Gestor_Ventas = () => {
                 <div className="content-section">
                     <div className="header">
                         <h2>Gestor de Ventas</h2>
+                        <div className="button-container">
+                            <button className="new-gestor-button" onClick={() => setSelectedSection(null)}>Regresar</button>
+                        </div>
                     </div>
                     {selectedSection === 'verGestores' && 
                     <div className="gestores-container">
@@ -142,7 +151,10 @@ const Gestor_Ventas = () => {
                             <>
                                 <div className="header">
                                     <h2>Gestores</h2>
-                                    <button className="new-gestor-button" onClick={handleNewGestorClick}>Nuevo Gestor</button>
+                                    <div className="button-container">
+                                        <button className="new-gestor-button" onClick={() => setSelectedSection(null)}>Regresar</button>
+                                        <button className="new-gestor-button" onClick={handleNewGestorClick}>Nuevo Gestor</button>
+                                    </div>
                                 </div>
                                 <div className="filters">
                                     <input
@@ -172,6 +184,7 @@ const Gestor_Ventas = () => {
                                                 <td>{gestor.estado}</td>
                                                 <td>
                                                     <button className="edit-button" onClick={() => handleEditGestorClick(gestor)}>Editar</button>
+                                                    <button className="edit-button" onClick={() => handleDeleteGestorClick(gestor.email)}>Eliminar</button>
                                                 </td>
                                             </tr>
                                         ))}

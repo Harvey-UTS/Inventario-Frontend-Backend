@@ -12,7 +12,7 @@ const Gestor_Almacen = () => {
     const [filters, setFilters] = useState({ nombre: '', cargo: '' });
 
     useEffect(() => {
-        const storedGestores = JSON.parse(localStorage.getItem('gestores_compras')); // Cambiado a 'gestores_compras'
+        const storedGestores = JSON.parse(localStorage.getItem('gestores_compras'));
         if (storedGestores) {
             setGestores(storedGestores);
         }
@@ -23,7 +23,7 @@ const Gestor_Almacen = () => {
             g.email === gestor.email ? { ...g, estado: g.estado === 'Activo' ? 'Inactivo' : 'Activo' } : g
         );
         setGestores(updatedGestores);
-        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores)); // Cambiado a 'gestores_compras'
+        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores));
     };
 
     const handleNewGestorClick = () => {
@@ -58,8 +58,14 @@ const Gestor_Almacen = () => {
         }
 
         setGestores(updatedGestores);
-        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores)); // Cambiado a 'gestores_compras'
+        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores));
         setShowForm(false);
+    };
+
+    const handleDeleteGestor = (email) => {
+        const updatedGestores = gestores.filter(g => g.email !== email); // Elimina el gestor por email
+        setGestores(updatedGestores); // Actualiza el estado
+        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores)); // Guarda los cambios en localStorage
     };
 
     const filteredGestores = gestores.filter(gestor => 
@@ -88,6 +94,9 @@ const Gestor_Almacen = () => {
                 <div className="content-section">
                     <div className="header">
                         <h2>Gestores Compras</h2>
+                        <div className="button-container">
+                            <button className="new-gestor-button" onClick={() => setSelectedSection(null)}>Regresar</button>
+                        </div>
                     </div>
                     {selectedSection === 'verGestores' && 
                     <div className="gestores-container">
@@ -143,7 +152,10 @@ const Gestor_Almacen = () => {
                             <>
                                 <div className="header">
                                     <h2>Gestores Compras</h2>
-                                    <button className="new-gestor-button" onClick={handleNewGestorClick}>Nuevo Gestor</button>
+                                    <div className="button-container">
+                                        <button className="new-gestor-button" onClick={() => setSelectedSection(null)}>Regresar</button>
+                                        <button className="new-gestor-button" onClick={handleNewGestorClick}>Nuevo Gestor</button>
+                                    </div>
                                 </div>
                                 <div className="filters">
                                     <input
@@ -173,6 +185,7 @@ const Gestor_Almacen = () => {
                                                 <td>{gestor.estado}</td>
                                                 <td>
                                                     <button className="edit-button" onClick={() => handleEditGestorClick(gestor)}>Editar</button>
+                                                    <button className="edit-button" onClick={() => handleDeleteGestor(gestor.email)}>Eliminar</button>
                                                 </td>
                                             </tr>
                                         ))}

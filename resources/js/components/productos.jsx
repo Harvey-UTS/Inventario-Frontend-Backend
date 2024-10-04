@@ -84,10 +84,12 @@ const Productos = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="form-row">
                             <div className="form-group">
+                                <br />
                                 <label>Nombre*</label>
                                 <input type="text" name="nombre" defaultValue={editingProduct ? editingProduct.nombre : ''} required />
                             </div>
                             <div className="form-group">
+                                <br />
                                 <label>Descripción*</label>
                                 <input type="text" name="descripcion" defaultValue={editingProduct ? editingProduct.descripcion : ''} required />
                             </div>
@@ -163,7 +165,7 @@ const Productos = () => {
                                     <td>{producto.stock}</td>
                                     <td>
                                     <button className="edit-button" onClick={() => handleEdit(producto)}>Edit</button>
-                                        <button className="delete-button" onClick={() => handleDelete(producto.id)}>Delete</button>
+                                        <button className="edit-button" onClick={() => handleDelete(producto.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}
