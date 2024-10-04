@@ -1,44 +1,40 @@
-import React, { useState } from 'react';
-import '../../css/clientes.css'; // Asegúrate de tener un archivo CSS correcto
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import '../../css/clientes.css';
 
 const Clientes = () => {
     const [showForm, setShowForm] = useState(false);
-    const [filters, setFilters] = useState({ nombre: '', cedula: '' });
+    const [filters, setFilters] = useState({ nombre: '' });
+    const [selectedCliente, setSelectedCliente] = useState(null);
+    const [clientes, setClientes] = useState([]); // Asegúrate de que comienza como un array
+    const [formData, setFormData] = useState({
+        nombre: '',
+        nit: '',
+        email: '',
+        telefono: ''
+    });
 
-    const [clientes, setClientes] = useState([
-        {
-            nombre: 'Juan Pérez',
-            cedula: '12345678',
-            email: 'juan.perez@example.com',
-            telefono: '3001234567',
-        },
-        {
-            nombre: 'María Gómez',
-            cedula: '23456789',
-            email: 'maria.gomez@example.com',
-            telefono: '3012345678',
-        },
-        {
-            nombre: 'Carlos López',
-            cedula: '34567890',
-            email: 'carlos.lopez@example.com',
-            telefono: '3023456789',
-        },
-        {
-            nombre: 'Ana Torres',
-            cedula: '45678901',
-            email: 'ana.torres@example.com',
-            telefono: '3034567890',
-        },
-        {
-            nombre: 'Luis Fernández',
-            cedula: '56789012',
-            email: 'luis.fernandez@example.com',
-            telefono: '3045678901',
-        },
-    ]); // Estado para almacenar los clientes con 5 registros iniciales
+    useEffect(() => {
+        fetchClientes();
+    }, []);
 
-    const handleNewClienteClick = () => {
+    const fetchClientes = async () => {
+        try {
+            const response = await axios.get('/api/clientes');
+            console.log('Clientes data:', response.data); // Verifica la respuesta aquí
+            setClientes(response.data); // Asegúrate de que esto sea un array
+        } catch (error) {
+            console.error("Error fetching clientes:", error);
+        }
+    };
+
+    const filteredClientes = Array.isArray(clientes) ? clientes.filter(cliente =>
+        cliente.nombre.toLowerCase().includes(filters.nombre.toLowerCase())
+    ) : [];
+
+    const handleNewClientClick = () => {
+        setFormData({ nombre: '', nit: '', email: '', telefono: '' });
+        setSelectedCliente(null);
         setShowForm(true);
     };
 
@@ -49,45 +45,125 @@ const Clientes = () => {
         });
     };
 
+    const handleInputChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        });
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Aquí puedes manejar la lógica para crear un nuevo cliente
-        console.log("Cliente creado");
-        // Resetea el formulario
-        setShowForm(false);
+
+        if (selectedCliente) {
+            // Actualiza el cliente existente
+            axios.put(`/api/clientes/${selectedCliente.id}`, formData)
+                .then(response => {
+                    console.log('Cliente actualizado', response.data);
+                    setShowForm(false);
+                    fetchClientes(); // Actualiza la lista después de editar
+                })
+                .catch(error => {
+                    console.error('Error actualizando el cliente', error);
+                });
+        } else {
+            // Crea un nuevo cliente
+            axios.post('/api/clientes', formData)
+                .then(response => {
+                    console.log('Cliente creado', response.data);
+                    setShowForm(false);
+                    fetchClientes(); // Actualiza la lista después de crear
+                })
+                .catch(error => {
+                    console.error('Error creando el cliente', error);
+                });
+        }
+    };
+
+    const handleEditClick = (cliente) => {
+        setSelectedCliente(cliente);
+        setFormData({
+            nombre: cliente.nombre,
+            cedula: cliente.cedula,
+            email: cliente.email,
+            telefono: cliente.telefono
+        });
+        setShowForm(true);
+    };
+
+    const handleDelete = async (id) => {
+        try {
+            await axios.delete(`/api/clientes/${id}`);
+            setClientes(clientes.filter(cliente => cliente.id !== id));
+        } catch (error) {
+            console.error("Error deleting cliente:", error);
+        }
     };
 
     return (
         <div className="clientes-container">
             {showForm ? (
-                <div className="create-cliente-form">
-                    <h2>Create Cliente</h2>
+                <div className="create-client-form">
+                    <h2>{selectedCliente ? 'Edit Cliente' : 'Create Cliente'}</h2>
                     <form onSubmit={handleSubmit}>
                         <div className="form-row">
                             <div className="form-group">
                                 <br />
                                 <label>Nombre*</label>
-                                <input type="text" required />
+                                <input
+                                    type="text"
+                                    name="nombre"
+                                    value={formData.nombre}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div className="form-group">
                                 <br />
-                                <label>Cédula*</label>
-                                <input type="text" required />
+                                <label>Cedula*</label>
+                                <input
+                                    type="text"
+                                    name="cedula"
+                                    value={formData.cedula}
+                                    onChange={handleInputChange}
+                                    required
+                                    disabled={selectedCliente}
+                                />
                             </div>
                         </div>
                         <div className="form-row">
                             <div className="form-group">
                                 <label>Email*</label>
-                                <input type="email" required />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={formData.email}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                             <div className="form-group">
                                 <label>Teléfono*</label>
-                                <input type="tel" required />
+                                <input
+                                    type="text"
+                                    name="telefono"
+                                    value={formData.telefono}
+                                    onChange={handleInputChange}
+                                    required
+                                />
                             </div>
                         </div>
                         <div className="form-buttons">
-                            <button type="submit" className="create-button">Create</button>
-                            <button type="button" className="cancel-button" onClick={() => setShowForm(false)}>Cancel</button>
+                            <button type="submit" className="create-button">
+                                {selectedCliente ? 'Update' : 'Create'}
+                            </button>
+                            <button
+                                type="button"
+                                className="cancel-button"
+                                onClick={() => setShowForm(false)}
+                            >
+                                Cancel
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -95,21 +171,16 @@ const Clientes = () => {
                 <>
                     <div className="header">
                         <h2>Clientes</h2>
-                        <button className="new-cliente-button" onClick={handleNewClienteClick}>New Cliente</button>
+                        <button className="new-cliente-button" onClick={handleNewClientClick}>
+                            New Cliente
+                        </button>
                     </div>
                     <div className="filters">
                         <input
                             type="text"
                             name="nombre"
-                            placeholder="Filtrar por Nombre"
+                            placeholder="Filtrar por nombre"
                             value={filters.nombre}
-                            onChange={handleFilterChange}
-                        />
-                        <input
-                            type="text"
-                            name="cedula"
-                            placeholder="Filtrar por Cédula"
-                            value={filters.cedula}
                             onChange={handleFilterChange}
                         />
                     </div>
@@ -117,24 +188,22 @@ const Clientes = () => {
                         <thead>
                             <tr>
                                 <th>Nombre</th>
-                                <th>Cédula</th>
+                                <th>cedula</th>
                                 <th>Email</th>
                                 <th>Teléfono</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {clientes.filter(cliente => 
-                                cliente.nombre.toLowerCase().includes(filters.nombre.toLowerCase()) &&
-                                cliente.cedula.toLowerCase().includes(filters.cedula.toLowerCase())
-                            ).map((cliente, index) => (
+                            {filteredClientes.map((cliente, index) => (
                                 <tr key={index}>
                                     <td>{cliente.nombre}</td>
                                     <td>{cliente.cedula}</td>
                                     <td>{cliente.email}</td>
                                     <td>{cliente.telefono}</td>
                                     <td>
-                                        <button className="edit-button">Edit</button>
+                                        <button className="edit-button" onClick={() => handleEditClick(cliente)}>Edit</button>
+                                        <button className="delete-button" onClick={() => handleDelete(cliente.id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))}

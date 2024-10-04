@@ -1,5 +1,5 @@
 import ReactDOM from 'react-dom/client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../css/Recepcionista.css';
 import Proveedores from '../components/proveedores.jsx';
 import Compras from '../components/compras.jsx';
@@ -19,6 +19,21 @@ const Recepcionista = () => {
   const [dashboardMenuVisible, setDashboardMenuVisible] = useState(false);
   const [activeContent, setActiveContent] = useState(null);
   const [notificationsVisible, setNotificationsVisible] = useState(false);
+  const [role, setRole] = useState(null);
+
+  useEffect(() => {
+    // Obtener el rol del usuario después de iniciar sesión
+    const fetchUserRole = async () => {
+      try {
+        const response = await axios.get('/user/role'); // Ajusta la ruta según tu configuración
+        setRole(response.data.role);
+      } catch (error) {
+        console.error('Error al obtener el rol del usuario:', error);
+      }
+    };
+
+    fetchUserRole();
+  }, []);
 
   const toggleSidebar = () => {
     setSidebarActive(!sidebarActive);
@@ -49,6 +64,68 @@ const Recepcionista = () => {
     }
   };
 
+  const renderSidebarItems = () => {
+    switch (role) {
+      case 'AdministradorAlmacen':
+        return (
+          <ul>
+                <strong>
+                    <li onClick={() => setActiveContent('Productos')}>Productos</li>
+                    <li onClick={() => setActiveContent('Gestor_Almacen')}>Gestor de Almacen</li>
+                </strong>
+          </ul>
+        );
+      case 'gestorAlmacen':
+        return (
+            <ul>
+                <strong>
+                    <li onClick={() => setActiveContent('Productos')}>Productos</li>
+                </strong>
+            </ul>
+        );
+      case 'AdministradorCompras':
+        return (
+          <ul>
+            <strong>
+                <li onClick={() => setActiveContent('Gestor_Compras')}>Gestor de Compras</li>
+                <li onClick={() => setActiveContent('Proveedores')}>Proveedores</li>
+                <li onClick={() => setActiveContent('Compras')}>Compras</li>
+            </strong>
+          </ul>
+        );
+        case 'gestorCompras':
+            return (
+              <ul>
+                    <strong>
+                        <li onClick={() => setActiveContent('Proveedores')}>Proveedores</li>
+                        <li onClick={() => setActiveContent('Compras')}>Compras</li>
+                    </strong>
+              </ul>
+            );
+      case 'AdministradorVentas':
+        return (
+          <ul>
+                <strong>
+                    <li onClick={() => setActiveContent('Gestor_Ventas')}>Gestor de Ventas</li>
+                    <li onClick={() => setActiveContent('Clientes')}>Clientes</li>
+                    <li onClick={() => setActiveContent('Ventas')}>Ventas</li>
+                </strong>
+          </ul>
+        );
+      case 'gestorVentas':
+            return (
+                <ul>
+                    <strong>
+                        <li onClick={() => setActiveContent('Clientes')}>Clientes</li>
+                        <li onClick={() => setActiveContent('Ventas')}>Ventas</li>
+                    </strong>
+                </ul>
+            );
+      default:
+        return <ul><li>No tienes permisos para ver esta página</li></ul>;
+    }
+  };
+
   return (
     <div className="dashboard-container">
       <header className="header">
@@ -60,8 +137,8 @@ const Recepcionista = () => {
         {menuVisible && (
           <div className="user-menu">
             <ul>
-              <li onClick={showProfile}>Perfil</li>
-              <li onClick={handleLogout}>Logout</li>
+            <li>Rol actual: {role}</li>
+            <li onClick={handleLogout}>Logout</li>
             </ul>
           </div>
         )}
@@ -75,21 +152,10 @@ const Recepcionista = () => {
           </div>
         )}
       </header>
-      
+
       <nav className={`sidebar ${sidebarActive ? 'active' : ''}`}>
         <center><h2 className="brand">Menu</h2></center><br />
-        <ul>
-          <strong>
-            <li onClick={() => setActiveContent('Proveedores')}>Proveedores</li>
-            <li onClick={() => setActiveContent('Compras')}>Compras</li>
-            <li onClick={() => setActiveContent('Productos')}>Productos</li>
-            <li onClick={() => setActiveContent('Ventas')}>Ventas</li>
-            <li onClick={() => setActiveContent('Clientes')}>Clientes</li>
-            <li onClick={() => setActiveContent('Gestor_Almacen')}>Gestor de Almacen</li>
-            <li onClick={() => setActiveContent('Gestor_Compras')}>Gestor de Compras</li>
-            <li onClick={() => setActiveContent('Gestor_Ventas')}>Gestor de Ventas</li>
-          </strong>
-        </ul>
+        {renderSidebarItems()}
       </nav>
 
       <div className="main-content">

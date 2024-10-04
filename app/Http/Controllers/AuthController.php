@@ -26,10 +26,24 @@ class AuthController extends Controller
             Session::put('user', $user);
 
             // Verificar el rol y redirigir a la interfaz correspondiente
-            if ($user->hasRole('client')) {
-                return response()->json(['redirect' => '/recepcionista'], 200);
-            } elseif ($user->hasRole('recepcionista')) {
-                return response()->json(['redirect' => '/'], 200);
+            if ($user->hasRole('AdministradorAlmacen')) {
+            $role = $user->roles->pluck('name')->first();
+            return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
+            } elseif ($user->hasRole('gestorAlmacen')) {
+            $role = $user->roles->pluck('name')->first();
+            return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
+            } elseif($user->hasRole('AdministradorCompras')){
+            $role = $user->roles->pluck('name')->first();
+            return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
+            } elseif($user->hasRole('gestorCompras')){
+            $role = $user->roles->pluck('name')->first();
+            return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
+            } elseif($user->hasRole('AdministradorVentas')){
+            $role = $user->roles->pluck('name')->first();
+            return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
+            } elseif($user->hasRole('gestorVentas')){
+            $role = $user->roles->pluck('name')->first();
+            return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
             }
         } else {
             // Credenciales incorrectas

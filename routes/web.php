@@ -35,6 +35,14 @@ Route::get('/recepcionista', function () {
 Route::post('/register', [RegisterController::class, 'register']);
 
 Route::post('/login', [AuthController::class, 'login']);
+Route::get('/user/role', function () {
+    $user = Auth::user();
+    if ($user) {
+        $role = $user->roles->pluck('name')->first(); // Obtener el rol
+        return response()->json(['role' => $role], 200);
+    }
+    return response()->json(['error' => 'No autenticado'], 401);
+});
 Route::post('/logout', function () {
     Auth::logout(); // Cierra la sesión
     return redirect('/login'); // Redirige a la página de inicio de sesión

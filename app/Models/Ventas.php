@@ -35,5 +35,25 @@ class Ventas extends Model
                 $product->save();
             }
         });
+
+        static::updating(function ($venta) {
+            // Actualiza el precio de compra
+            $venta->precio_de_venta = $venta->cantidad * $venta->valor_unitario;
+
+            // Encuentra el producto para actualizar el stock
+            $product = Productos::find($venta->idProductos);
+            if ($product) {
+                // Si la cantidad ha cambiado, actualiza el stock
+                // Primero resta la cantidad anterior
+                $originalCompra = static::find($venta->id);
+                if ($originalCompra) {
+                    $product->stock += $originalCompra->cantidad;
+                }
+
+                // Luego suma la nueva cantidad
+                $product->stock -= $venta->cantidad;
+                $product->save();
+            }
+        });
     }
 }
