@@ -1,0 +1,188 @@
+/* CSS */
+.SUBELO {
+    display: flex;
+    flex-direction: column; /* Apilar elementos verticalmente */
+    align-items: flex-start; /* Alinear a la izquierda */
+    margin: 0; /* Sin margen por defecto */
+    padding: 0; /* Sin padding por defecto */
+    margin-top: -350px;
+    font-family: Arial, sans-serif; /* Fuente general */
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.new-gestor-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.new-gestor-button:hover {
+    background-color: #218838;
+}
+
+.filter-and-buttons {
+    margin-bottom: 20px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.view-button,
+.active-button,
+.inactive-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.view-button:hover,
+.active-button:hover,
+.inactive-button:hover {
+    background-color: #0056b3;
+}
+
+.filter-input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-left: 10px;
+    flex: 1;
+}
+
+.gestor-form {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px; /* Añadido para separar del resto del contenido */
+}
+
+.form-label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-input {
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    transition: border-color 0.3s;
+}
+
+.form-input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.submit-button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    background-color: #28a745;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+}
+
+.usuarios-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px; /* Añadido para espaciar la tabla del contenido anterior */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra para destacar la tabla */
+    border-radius: 5px; /* Bordes redondeados */
+    overflow: hidden; /* Para aplicar bordes redondeados correctamente */
+}
+
+.usuarios-table th,
+.usuarios-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    color: white; /* Cambiar color del texto a blanco */
+}
+
+.usuarios-table th {
+    background-color: #343a40; /* Fondo oscuro para el encabezado */
+    font-weight: bold;
+}
+
+.usuario-row {
+    background-color: #495057; /* Fondo oscuro para las filas */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.usuario-row button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: #dc3545;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.usuario-row button:hover {
+    background-color: #c82333;
+}
+
+/* Estilo para el modal */
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+.modal-content {
+    padding: 20px;
+    border-radius: 5px;
+    width: 300px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    margin:10px;
+    margin-top:-9px;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    text-decoration: none;
+    cursor: pointer;
+}
