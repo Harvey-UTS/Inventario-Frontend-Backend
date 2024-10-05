@@ -49,16 +49,30 @@ const Login = () => {
                     'X-CSRF-TOKEN': csrfToken, // Incluir el token CSRF en la cabecera
                 },
             });
-
+    
             // Redirigir según el rol del usuario
             if (response.status === 200) {
                 const redirectUrl = response.data.redirect;
                 window.location.href = redirectUrl; // Redirige a la interfaz correspondiente
             }
         } catch (error) {
-            console.error('Error al conectar con el servidor:', error);
-            if (error.response && error.response.status === 401) {
-                alert('Credenciales incorrectas');
+            if (error.response) {
+                if (error.response.status === 401) {
+                    // Credenciales incorrectas (correo o contraseña)
+                    if (error.response.data.message === 'Credenciales incorrectas') {
+                        alert('Lo siento, el correo o la contraseña son incorrectos. Por favor, verifica tus datos e inténtalo nuevamente.');
+                    }
+                } else if (error.response.status === 403) {
+                    // Usuario inactivo
+                    if (error.response.data.message === 'Su cuenta no está activa.') {
+                        alert('Tu cuenta está inactiva. Por favor, contacta con soporte para más información.');
+                    }
+                } else {
+                    // Error inesperado
+                    alert('Ha ocurrido un error inesperado. Por favor, intenta de nuevo más tarde.');
+                }
+            } else {
+                console.error('Error al conectar con el servidor:', error);
             }
         }
     };
