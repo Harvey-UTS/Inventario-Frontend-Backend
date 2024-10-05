@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('gestor_compras', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->enum('estado', ['activo', 'inactivo'])->default('activo');
-            $table->rememberToken();
+            $table->string('name'); // Nombre del gestor
+            $table->string('email')->unique(); // Correo electrónico
+            $table->string('password'); // Contraseña
+            $table->enum('estado', ['activo', 'inactivo'])->default('activo'); // Estado del gestor
             $table->timestamps();
         });
     }
@@ -28,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('gestor_compras');
     }
 };

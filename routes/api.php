@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\ClientesController;
-use App\Http\Controllers\ComprasController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VentasController;
+use App\Http\Controllers\ComprasController;
+use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
-use App\Http\Controllers\VentasController;
+use App\Http\Controllers\GestorComprasController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,3 +33,5 @@ Route::apiResource('clientes', ClientesController::class);
 Route::apiResource('compras', ComprasController::class);
 
 Route::apiResource('ventas', VentasController::class);
+
+Route::apiResource('gestor-compras', GestorComprasController::class);

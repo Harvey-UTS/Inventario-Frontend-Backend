@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../../../css/gestor_almacen.css';
 import Gestor_Activo from './gestor_activo.jsx';
 import Gestor_Inactivo from './gestor_inactivo.jsx';
+import axios from 'axios';
 
 const Gestor_Almacen = () => {
     const [gestores, setGestores] = useState([]);
@@ -9,21 +10,29 @@ const Gestor_Almacen = () => {
     const [showForm, setShowForm] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [currentGestor, setCurrentGestor] = useState(null);
-    const [filters, setFilters] = useState({ nombre: '', cargo: '' });
+    const [filtro, setFiltro] = useState('');
 
     useEffect(() => {
-        const storedGestores = JSON.parse(localStorage.getItem('gestores_compras'));
-        if (storedGestores) {
-            setGestores(storedGestores);
-        }
+        fetchGestores();
     }, []);
 
-    const handleSwitchChange = (gestor) => {
-        const updatedGestores = gestores.map(g => 
-            g.email === gestor.email ? { ...g, estado: g.estado === 'Activo' ? 'Inactivo' : 'Activo' } : g
-        );
-        setGestores(updatedGestores);
-        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores));
+    const fetchGestores = async () => {
+        try {
+            const response = await axios.get('api/gestor-compras'); // Reemplaza con tu URL de API
+            setGestores(response.data);
+        } catch (error) {
+            console.error('Error fetching gestores:', error);
+        }
+    };
+
+    const handleSwitchChange = async (gestor) => {
+        const updatedGestor = { ...gestor, estado: gestor.estado === 'Activo' ? 'Inactivo' : 'Activo' };
+        try {
+            await axios.put(`api/gestor-compras/${gestor.email}`, updatedGestor);
+            fetchGestores(); // Actualiza la lista después de cambiar el estado
+        } catch (error) {
+            console.error('Error updating gestor:', error);
+        }
     };
 
     const handleNewGestorClick = () => {
@@ -38,40 +47,44 @@ const Gestor_Almacen = () => {
         setShowForm(true);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.target);
         const nuevoGestor = {
-            nombre: formData.get('nombre'),
-            apellido: formData.get('apellido'),
+            name: formData.get('name'),
             email: formData.get('email'),
-            estado: formData.get('estado'),
+            password: formData.get('password'), // Ahora solo envía estos 3 campos
         };
 
-        let updatedGestores;
-        if (isEditing) {
-            updatedGestores = gestores.map(g => 
-                g.email === currentGestor.email ? nuevoGestor : g
-            );
-        } else {
-            updatedGestores = [...gestores, nuevoGestor];
+        try {
+            if (isEditing) {
+                await axios.put(`api/gestor-compras/${currentGestor.email}`, nuevoGestor);
+            } else {
+                await axios.post('api/gestor-compras', nuevoGestor);
+            }
+
+            fetchGestores(); // Refresca la lista de gestores
+            setShowForm(false);
+        } catch (error) {
+            console.error('Error saving gestor:', error);
         }
-
-        setGestores(updatedGestores);
-        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores));
-        setShowForm(false);
     };
 
-    const handleDeleteGestor = (email) => {
-        const updatedGestores = gestores.filter(g => g.email !== email); // Elimina el gestor por email
-        setGestores(updatedGestores); // Actualiza el estado
-        localStorage.setItem('gestores_compras', JSON.stringify(updatedGestores)); // Guarda los cambios en localStorage
+    const handleDeleteGestor = async (email) => {
+        try {
+            await axios.delete(`api/gestor-compras/${email}`);
+            fetchGestores(); // Refresca la lista después de eliminar
+        } catch (error) {
+            console.error('Error deleting gestor:', error);
+        }
     };
 
-    const filteredGestores = gestores.filter(gestor => 
-        gestor.nombre.toLowerCase().includes(filters.nombre.toLowerCase()) &&
-        (filters.cargo === '' || gestor.cargo === filters.cargo)
-    );
+    const gestoresFiltrados = gestores
+        .filter(gestor => gestor.rol === 'gestorCompra') // Filtra solo los que tienen rol 'gestorCompra'
+        .filter(gestor => {
+            const nombreGestor = gestor.nombre || ''; // Asegúrate de que sea una cadena
+            return nombreGestor.toLowerCase().includes(filtro.toLowerCase());
+        });
 
     return (
         <div>
@@ -109,18 +122,9 @@ const Gestor_Almacen = () => {
                                             <label>Nombre*</label>
                                             <input 
                                                 type="text" 
-                                                name="nombre" 
+                                                name="name" 
                                                 required 
-                                                defaultValue={isEditing ? currentGestor.nombre : ''} 
-                                            />
-                                        </div>
-                                        <div className="form-group">
-                                            <label>Apellido*</label>
-                                            <input 
-                                                type="text" 
-                                                name="apellido" 
-                                                required 
-                                                defaultValue={isEditing ? currentGestor.apellido : ''} 
+                                                defaultValue={isEditing ? currentGestor.name : ''} 
                                             />
                                         </div>
                                     </div>
@@ -135,11 +139,13 @@ const Gestor_Almacen = () => {
                                             />
                                         </div>
                                         <div className="form-group">
-                                            <label>Estado*</label>
-                                            <select name="estado" required defaultValue={isEditing ? currentGestor.estado : 'Activo'}>
-                                                <option value="Activo">Activo</option>
-                                                <option value="Inactivo">Inactivo</option>
-                                            </select>
+                                            <label>Contraseña*</label>
+                                            <input 
+                                                type="password" 
+                                                name="password" 
+                                                required 
+                                                defaultValue={isEditing ? currentGestor.password : ''} 
+                                            />
                                         </div>
                                     </div>
                                     <div className="form-buttons">
@@ -162,25 +168,23 @@ const Gestor_Almacen = () => {
                                         type="text"
                                         name="nombre"
                                         placeholder="Filtrar por nombre"
-                                        value={filters.nombre}
-                                        onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
+                                        value={filtro}
+                                        onChange={(e) => setFiltro(e.target.value)}
                                     />
                                 </div>
                                 <table className="gestores-table">
                                     <thead>
                                         <tr>
                                             <th>Nombre</th>
-                                            <th>Apellido</th>
                                             <th>Email</th>
                                             <th>Estado</th>
                                             <th>Acciones</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {filteredGestores.map((gestor, index) => (
+                                        {gestoresFiltrados.map((gestor, index) => (
                                             <tr key={index}>
-                                                <td>{gestor.nombre}</td>
-                                                <td>{gestor.apellido}</td>
+                                                <td>{gestor.name}</td>
                                                 <td>{gestor.email}</td>
                                                 <td>{gestor.estado}</td>
                                                 <td>
@@ -196,10 +200,10 @@ const Gestor_Almacen = () => {
                     </div>
                     }
                     {selectedSection === 'gestoresActivos' && (
-                        <Gestor_Activo gestores={gestores.filter(g => g.estado === 'Activo')} handleSwitchChange={handleSwitchChange} />
+                        <Gestor_Activo gestores={gestores.filter(g => g.estado === 'Activo' && g.rol === 'gestorCompra')} handleSwitchChange={handleSwitchChange} />
                     )}
                     {selectedSection === 'gestoresInactivos' && (
-                        <Gestor_Inactivo gestores={gestores.filter(g => g.estado === 'Inactivo')} handleSwitchChange={handleSwitchChange} />
+                        <Gestor_Inactivo gestores={gestores.filter(g => g.estado === 'Inactivo' && g.rol === 'gestorCompra')} handleSwitchChange={handleSwitchChange} />
                     )}
                 </div>
             )}

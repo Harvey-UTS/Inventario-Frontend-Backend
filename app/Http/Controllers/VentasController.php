@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ventas;
+use App\Models\Productos;
+use App\Models\Clientes;
 use Illuminate\Http\Request;
 
 class VentasController extends Controller

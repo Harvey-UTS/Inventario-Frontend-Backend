@@ -24,12 +24,13 @@ const Ventas = () => {
 
     const fetchData = async () => {
         try {
-            const productosResponse = await axios.get('/api/productos'); // Ajusta la URL según tu API
-            const clientesResponse = await axios.get('/api/clientes'); // Ajusta la URL según tu API
-            const ventasResponse = await axios.get('/api/ventas'); // Ajusta la URL según tu API
+            const productosResponse = await axios.get('/api/productos');
+            const clientesResponse = await axios.get('/api/clientes');
+            const ventasResponse = await axios.get('/api/ventas');
             setProductos(productosResponse.data);
             setClientes(clientesResponse.data);
             setVentas(ventasResponse.data);
+            console.log(ventasResponse.data); // Para verificar la estructura de los datos
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -193,12 +194,12 @@ const Ventas = () => {
                                 (filters.idCliente === '' || (venta.cliente && venta.cliente.id.toString().includes(filters.idCliente)))
                             ).map((venta, index) => (
                                 <tr key={index}>
-                                    <td>{venta.producto ? venta.producto.nombre : 'Producto no disponible'}</td>
-                                    <td>{venta.cliente ? venta.cliente.nombre : 'Cliente no disponible'}</td>
+                                     <td>{venta.products.nombre}</td>
+                                    <td>{venta.clientes.nombre}</td>
                                     <td>{venta.cantidad}</td>
-                                    <td>{venta.valor_unitario ? venta.valor_unitario.toLocaleString() : 'N/A'}</td>
-                                    <td>{venta.precio_de_venta ? venta.precio_de_venta.toLocaleString() : 'N/A'}</td>
-                                    <td>{venta.soporte_de_compra || 'No disponible'}</td>
+                                    <td>{venta.valor_unitario.toLocaleString()}</td>
+                                    <td>{venta.precio_de_venta.toLocaleString()}</td>
+                                    <td>{venta.soporte_de_compra}</td>
                                     <td>
                                         <button className="edit-button" onClick={() => handleEditClick(venta)}>Edit</button>
                                         <button className="edit-button" onClick={() => handleDeleteClick(venta.id)}>Delete</button>
