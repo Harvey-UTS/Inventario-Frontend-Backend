@@ -34,4 +34,8 @@ Route::apiResource('compras', ComprasController::class);
 
 Route::apiResource('ventas', VentasController::class);
 
-Route::apiResource('gestor-compras', GestorComprasController::class);
+Route::get('/gestores', [GestorComprasController::class, 'index']);
+Route::post('/gestores', [GestorComprasController::class, 'store']);
+Route::get('/gestores/{id}', [GestorComprasController::class, 'show']);
+Route::put('/gestores/{id}', [GestorComprasController::class, 'update']);
+Route::delete('/gestores/{id}', [GestorComprasController::class, 'destroy']);

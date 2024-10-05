@@ -4,14 +4,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegisterController;
-// use Spatie\Permission\Models\Role;
+//use Spatie\Permission\Models\Role;
 
-// $role = Role::create(['name'=>'AdministradorAlmacen']);
-// $role = Role::create(['name'=>'gestorAlmacen']);
-// $role = Role::create(['name'=>'AdministradorCompras']);
-// $role = Role::create(['name'=>'gestorCompras']);
-// $role = Role::create(['name'=>'AdministradorVentas']);
-// $role = Role::create(['name'=>'gestorVentas']);
+ //$role = Role::create(['name'=>'AdministradorAlmacen']);
+ //$role = Role::create(['name'=>'gestorAlmacen']);
+ //$role = Role::create(['name'=>'AdministradorCompras']);
+ //$role = Role::create(['name'=>'gestorCompras']);
+ //$role = Role::create(['name'=>'AdministradorVentas']);
+ //$role = Role::create(['name'=>'gestorVentas']);
 
 /*
 |--------------------------------------------------------------------------
