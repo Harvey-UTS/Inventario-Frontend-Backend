@@ -7,7 +7,7 @@ const GestorCompras = () => {
         name: '',
         email: '',
         password: '',
-        estado: 'Activo',
+        estado: 'activo',
     });
     const [usuarios, setUsuarios] = useState([]);
     const [filters, setFilters] = useState({ nombre: '' });
@@ -76,7 +76,7 @@ const GestorCompras = () => {
     };
 
     const resetForm = () => {
-        setNuevoGestor({ name: '', email: '', password: '', estado: 'Activo' });
+        setNuevoGestor({ name: '', email: '', password: '', estado: 'activo' });
         setIsEditing(false);
         setCurrentGestor(null);
         setShowModal(false);
@@ -87,23 +87,26 @@ const GestorCompras = () => {
     );
 
     // Filtrar gestores activos e inactivos
-    const activos = usuarios.filter(gestor => gestor.estado === 'Activo');
-    const inactivos = usuarios.filter(gestor => gestor.estado === 'Inactivo');
+    const activos = usuarios.filter(gestor => gestor.estado === 'activo');
+    const inactivos = usuarios.filter(gestor => gestor.estado === 'inactivo');
 
     // Cambiar estado del gestor
     const handleToggleState = (gestor) => {
         const confirmChange = window.confirm("¿Estás seguro que deseas cambiar el estado de este gestor?");
         if (confirmChange) {
-            const updatedGestor = { ...gestor, estado: gestor.estado === 'Activo' ? 'Inactivo' : 'Activo' };
-            updateGestorInApi(updatedGestor); // Función para actualizar en la API
+            // Cambiar el estado entre 'Activo' e 'Inactivo'
+            const updatedGestor = { ...gestor, estado: gestor.estado === 'activo' ? 'inactivo' : 'activo' };
+            
+            // Actualizar en la API
+            updateGestorInApi(updatedGestor); // Llamar a la función que actualiza el estado en la API
         }
     };
 
     // Función para actualizar el gestor en la API
     const updateGestorInApi = async (updatedGestor) => {
         try {
-            await axios.put(`/api/gestores/${updatedGestor.id}`, updatedGestor);
-            setUsuarios((prev) => prev.map((gestor) => (gestor.id === updatedGestor.id ? updatedGestor : gestor)));
+            await axios.put(`/api/gestores/${updatedGestor.id}`, updatedGestor); // Enviar el gestor actualizado a la API
+            setUsuarios((prev) => prev.map((gestor) => (gestor.id === updatedGestor.id ? updatedGestor : gestor))); // Actualizar el estado en el frontend
         } catch (error) {
             console.error('Error al actualizar el estado del gestor:', error.response?.data || error.message);
         }
@@ -167,10 +170,10 @@ const GestorCompras = () => {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={gestor.estado === 'Activo'}
+                                    checked={gestor.estado === 'activo'}
                                     onChange={() => handleToggleState(gestor)}
                                 />
-                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
                             </label>
                         </div>
                     ))}
@@ -185,10 +188,10 @@ const GestorCompras = () => {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={gestor.estado === 'Inactivo'}
+                                    checked={gestor.estado === 'inactivo'}
                                     onChange={() => handleToggleState(gestor)}
                                 />
-                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
                             </label>
                         </div>
                     ))}

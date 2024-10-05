@@ -23,6 +23,7 @@ class GestorComprasController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:8',
+
         ]);
 
         // Crea el usuario y asigna el rol 'gestorCompras'
@@ -30,7 +31,7 @@ class GestorComprasController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
-            'estado' => 'Activo',
+            'estado' => 'activo',
         ]);
 
         $user->assignRole('gestorCompras');
@@ -48,10 +49,12 @@ class GestorComprasController extends Controller
     {
         $user = User::role('gestorCompras')->findOrFail($id);
 
+        // Valida los datos
         $validatedData = $request->validate([
             'name' => 'string|max:255',
             'email' => 'email|unique:users,email,'.$id,
             'password' => 'string|min:8|nullable',
+            'estado' => 'in:activo,inactivo',  // Asegurarse de validar el estado
         ]);
 
         if (isset($validatedData['password'])) {
