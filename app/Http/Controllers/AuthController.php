@@ -26,25 +26,25 @@ class AuthController extends Controller
             Session::put('user', $user);
 
             // Verificar el rol y redirigir a la interfaz correspondiente
-            if ($user->hasRole('AdministradorAlmacen') && $user->estado === 'Activo') {
+            if ($user->hasRole('AdministradorAlmacen') && $user->estado === 'activo') {
             $role = $user->roles->pluck('name')->first();
             return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
-            } elseif ($user->hasRole('gestorAlmacen') && $user->estado === 'Activo') {
+            } elseif ($user->hasRole('gestorAlmacen') && $user->estado === 'activo') {
             $role = $user->roles->pluck('name')->first();
             return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
-            } elseif($user->hasRole('AdministradorCompras') && $user->estado === 'Activo'){
+            } elseif($user->hasRole('AdministradorCompras') && $user->estado === 'activo'){
             $role = $user->roles->pluck('name')->first();
             return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
-            } elseif($user->hasRole('gestorCompras') && $user->estado === 'Activo'){
+            } elseif($user->hasRole('gestorCompras') && $user->estado === 'activo'){
             $role = $user->roles->pluck('name')->first();
             return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
-            } elseif($user->hasRole('AdministradorVentas') && $user->estado === 'Activo'){
+            } elseif($user->hasRole('AdministradorVentas') && $user->estado === 'activo'){
             $role = $user->roles->pluck('name')->first();
             return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
-            } elseif($user->hasRole('gestorVentas') && $user->estado === 'Activo'){
+            } elseif($user->hasRole('gestorVentas') && $user->estado === 'activo'){
             $role = $user->roles->pluck('name')->first();
             return response()->json(['role' => $role, 'redirect' => '/recepcionista'], 200);
-            } elseif( $user->estado !== 'Activo'){
+            } elseif( $user->estado !== 'activo'){
                 return response()->json(['message' => 'Su cuenta no está activa.'], 403);
             }
         } else {

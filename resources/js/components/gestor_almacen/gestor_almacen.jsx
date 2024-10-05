@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../../css/gestor_compras.css';
+
 
 const GestorAlmacen = () => {
     const [nuevoGestor, setNuevoGestor] = useState({
         name: '',
         email: '',
         password: '',
-        estado: 'Activo',
+        estado: 'activo',
     });
     const [usuarios, setUsuarios] = useState([]);
     const [filters, setFilters] = useState({ nombre: '' });
@@ -76,7 +76,7 @@ const GestorAlmacen = () => {
     };
 
     const resetForm = () => {
-        setNuevoGestor({ name: '', email: '', password: '', estado: 'Activo' });
+        setNuevoGestor({ name: '', email: '', password: '', estado: 'activo' });
         setIsEditing(false);
         setCurrentGestor(null);
         setShowModal(false);
@@ -87,14 +87,14 @@ const GestorAlmacen = () => {
     );
 
     // Filtrar gestores activos e inactivos
-    const activos = usuarios.filter(gestor => gestor.estado === 'Activo');
-    const inactivos = usuarios.filter(gestor => gestor.estado === 'Inactivo');
+    const activos = usuarios.filter(gestor => gestor.estado === 'activo');
+    const inactivos = usuarios.filter(gestor => gestor.estado === 'inactivo');
 
     // Cambiar estado del gestor
     const handleToggleState = (gestor) => {
         const confirmChange = window.confirm("¿Estás seguro que deseas cambiar el estado de este gestor?");
         if (confirmChange) {
-            const updatedGestor = { ...gestor, estado: gestor.estado === 'Activo' ? 'Inactivo' : 'Activo' };
+            const updatedGestor = { ...gestor, estado: gestor.estado === 'activo' ? 'inactivo' : 'activo' };
             updateGestorInApi(updatedGestor); // Función para actualizar en la API
         }
     };
@@ -110,7 +110,7 @@ const GestorAlmacen = () => {
     };
 
     return (
-        <div className="SUBELO">
+        <div className="SUBELOALMACEN">
             <div className="header">
                 <h2>Gestores Almacen</h2>
                 <button className="new-gestor-button" onClick={() => { resetForm(); setShowModal(true); }}>
@@ -167,10 +167,10 @@ const GestorAlmacen = () => {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={gestor.estado === 'Activo'}
+                                    checked={gestor.estado === 'activo'}
                                     onChange={() => handleToggleState(gestor)}
                                 />
-                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
                             </label>
                         </div>
                     ))}
@@ -185,10 +185,10 @@ const GestorAlmacen = () => {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={gestor.estado === 'Inactivo'}
+                                    checked={gestor.estado === 'inactivo'}
                                     onChange={() => handleToggleState(gestor)}
                                 />
-                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
                             </label>
                         </div>
                     ))}

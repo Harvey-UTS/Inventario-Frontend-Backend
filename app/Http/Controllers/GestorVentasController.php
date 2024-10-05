@@ -29,7 +29,7 @@ class GestorVentasController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'password' => Hash::make($validatedData['password']),
-            'estado' => 'Activo',
+            'estado' => 'activo',
         ]);
 
         $user->assignRole('gestorVentas');
@@ -47,10 +47,12 @@ class GestorVentasController extends Controller
     {
         $user = User::role('gestorVentas')->findOrFail($id);
 
+        // Valida los datos
         $validatedData = $request->validate([
             'name' => 'string|max:255',
             'email' => 'email|unique:users,email,'.$id,
             'password' => 'string|min:8|nullable',
+            'estado' => 'in:activo,inactivo',  // Asegurarse de validar el estado
         ]);
 
         if (isset($validatedData['password'])) {

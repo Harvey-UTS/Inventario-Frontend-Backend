@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../../css/gestor_compras.css';
 
 const Gestor_Ventas = () => {
     const [nuevoGestor, setNuevoGestor] = useState({
         name: '',
         email: '',
         password: '',
-        estado: 'Activo',
+        estado: 'activo',
     });
     const [usuarios, setUsuarios] = useState([]);
     const [filters, setFilters] = useState({ nombre: '' });
@@ -19,7 +18,7 @@ const Gestor_Ventas = () => {
     useEffect(() => {
         const fetchUsuarios = async () => {
             try {
-                const response = await axios.get('/api/ventas');
+                const response = await axios.get('/api/Gventas');
                 setUsuarios(response.data);
             } catch (error) {
                 console.error('Error al obtener los usuarios:', error.response?.data || error.message);
@@ -31,7 +30,7 @@ const Gestor_Ventas = () => {
 
     const createGestor = async () => {
         try {
-            const response = await axios.post('/api/ventas', nuevoGestor);
+            const response = await axios.post('/api/Gventas', nuevoGestor);
             setUsuarios((prev) => [...prev, response.data]);
             resetForm();
         } catch (error) {
@@ -41,7 +40,7 @@ const Gestor_Ventas = () => {
 
     const updateGestor = async () => {
         try {
-            const response = await axios.put(`/api/ventas/${currentGestor.id}`, nuevoGestor);
+            const response = await axios.put(`/api/Gventas/${currentGestor.id}`, nuevoGestor);
             setUsuarios((prev) => prev.map((gestor) => (gestor.id === currentGestor.id ? response.data : gestor)));
             resetForm();
         } catch (error) {
@@ -49,9 +48,10 @@ const Gestor_Ventas = () => {
         }
     };
 
+
     const deleteGestor = async (gestorId) => {
         try {
-            await axios.delete(`/api/ventas/${gestorId}`);
+            await axios.delete(`/api/Gventas/${gestorId}`);
             setUsuarios((prev) => prev.filter((gestor) => gestor.id !== gestorId));
         } catch (error) {
             console.error('Error al eliminar el gestor:', error.response?.data || error.message);
@@ -76,7 +76,7 @@ const Gestor_Ventas = () => {
     };
 
     const resetForm = () => {
-        setNuevoGestor({ name: '', email: '', password: '', estado: 'Activo' });
+        setNuevoGestor({ name: '', email: '', password: '', estado: 'activo' });
         setIsEditing(false);
         setCurrentGestor(null);
         setShowModal(false);
@@ -87,14 +87,14 @@ const Gestor_Ventas = () => {
     );
 
     // Filtrar gestores activos e inactivos
-    const activos = usuarios.filter(gestor => gestor.estado === 'Activo');
-    const inactivos = usuarios.filter(gestor => gestor.estado === 'Inactivo');
+    const activos = usuarios.filter(gestor => gestor.estado === 'activo');
+    const inactivos = usuarios.filter(gestor => gestor.estado === 'inactivo');
 
     // Cambiar estado del gestor
     const handleToggleState = (gestor) => {
         const confirmChange = window.confirm("¿Estás seguro que deseas cambiar el estado de este gestor?");
         if (confirmChange) {
-            const updatedGestor = { ...gestor, estado: gestor.estado === 'Activo' ? 'Inactivo' : 'Activo' };
+            const updatedGestor = { ...gestor, estado: gestor.estado === 'activo' ? 'inactivo' : 'activo' };
             updateGestorInApi(updatedGestor); // Función para actualizar en la API
         }
     };
@@ -102,7 +102,7 @@ const Gestor_Ventas = () => {
     // Función para actualizar el gestor en la API
     const updateGestorInApi = async (updatedGestor) => {
         try {
-            await axios.put(`/api/ventas/${updatedGestor.id}`, updatedGestor);
+            await axios.put(`/api/Gventas/${updatedGestor.id}`, updatedGestor);
             setUsuarios((prev) => prev.map((gestor) => (gestor.id === updatedGestor.id ? updatedGestor : gestor)));
         } catch (error) {
             console.error('Error al actualizar el estado del gestor:', error.response?.data || error.message);
@@ -110,7 +110,7 @@ const Gestor_Ventas = () => {
     };
 
     return (
-        <div className="SUBELO">
+        <div className="SUBELOVENTAS">
             <div className="header">
                 <h2>Gestores Almacen</h2>
                 <button className="new-gestor-button" onClick={() => { resetForm(); setShowModal(true); }}>
@@ -167,10 +167,10 @@ const Gestor_Ventas = () => {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={gestor.estado === 'Activo'}
+                                    checked={gestor.estado === 'activo'}
                                     onChange={() => handleToggleState(gestor)}
                                 />
-                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
                             </label>
                         </div>
                     ))}
@@ -185,10 +185,10 @@ const Gestor_Ventas = () => {
                             <label>
                                 <input
                                     type="checkbox"
-                                    checked={gestor.estado === 'Inactivo'}
+                                    checked={gestor.estado === 'inactivo'}
                                     onChange={() => handleToggleState(gestor)}
                                 />
-                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
                             </label>
                         </div>
                     ))}

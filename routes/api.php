@@ -48,8 +48,8 @@ Route::get('/almacen/{id}', [GestorAlmacenController::class, 'show']);
 Route::put('/almacen/{id}', [GestorAlmacenController::class, 'update']);
 Route::delete('/almacen/{id}', [GestorAlmacenController::class, 'destroy']);
 
-Route::get('/ventas', [GestorVentasController::class, 'index']);
-Route::post('/ventas', [GestorVentasController::class, 'store']);
-Route::get('/ventas/{id}', [GestorVentasController::class, 'show']);
-Route::put('/ventas/{id}', [GestorVentasController::class, 'update']);
-Route::delete('/ventas/{id}', [GestorVentasController::class, 'destroy']);
+Route::get('/Gventas', [GestorVentasController::class, 'index']);
+Route::post('/Gventas', [GestorVentasController::class, 'store']);
+Route::get('/Gventas/{id}', [GestorVentasController::class, 'show']);
+Route::put('/Gventas/{id}', [GestorVentasController::class, 'update']);
+Route::delete('/Gventas/{id}', [GestorVentasController::class, 'destroy']);
