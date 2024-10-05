@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../../../css/gestor_almacen.css';
+import '../../../css/gestor_compras.css';
 
-const GestorVentas = () => {
+const Gestor_Ventas = () => {
     const [nuevoGestor, setNuevoGestor] = useState({
         name: '',
         email: '',
-        password: ''
+        password: '',
+        estado: 'Activo',
     });
     const [usuarios, setUsuarios] = useState([]);
     const [filters, setFilters] = useState({ nombre: '' });
-    const [showForm, setShowForm] = useState(false);
+    const [showModal, setShowModal] = useState(false);
     const [isEditing, setIsEditing] = useState(false);
     const [currentGestor, setCurrentGestor] = useState(null);
+    const [viewMode, setViewMode] = useState('verGestores');
 
     useEffect(() => {
         const fetchUsuarios = async () => {
@@ -63,90 +65,187 @@ const GestorVentas = () => {
         } else {
             createGestor();
         }
-        setShowForm(false);
+        setShowModal(false);
     };
 
     const handleEditGestorClick = (gestor) => {
         setIsEditing(true);
         setCurrentGestor(gestor);
-        setNuevoGestor({ name: gestor.name, email: gestor.email, password: '' });
-        setShowForm(true);
+        setNuevoGestor({ name: gestor.name, email: gestor.email, password: '', estado: gestor.estado });
+        setShowModal(true);
     };
 
     const resetForm = () => {
-        setNuevoGestor({ name: '', email: '', password: '' });
+        setNuevoGestor({ name: '', email: '', password: '', estado: 'Activo' });
         setIsEditing(false);
         setCurrentGestor(null);
-        setShowForm(false);
+        setShowModal(false);
     };
 
     const filteredUsuarios = usuarios.filter((usuario) =>
         usuario.name.toLowerCase().includes(filters.nombre.toLowerCase())
     );
 
+    // Filtrar gestores activos e inactivos
+    const activos = usuarios.filter(gestor => gestor.estado === 'Activo');
+    const inactivos = usuarios.filter(gestor => gestor.estado === 'Inactivo');
+
+    // Cambiar estado del gestor
+    const handleToggleState = (gestor) => {
+        const confirmChange = window.confirm("¿Estás seguro que deseas cambiar el estado de este gestor?");
+        if (confirmChange) {
+            const updatedGestor = { ...gestor, estado: gestor.estado === 'Activo' ? 'Inactivo' : 'Activo' };
+            updateGestorInApi(updatedGestor); // Función para actualizar en la API
+        }
+    };
+
+    // Función para actualizar el gestor en la API
+    const updateGestorInApi = async (updatedGestor) => {
+        try {
+            await axios.put(`/api/ventas/${updatedGestor.id}`, updatedGestor);
+            setUsuarios((prev) => prev.map((gestor) => (gestor.id === updatedGestor.id ? updatedGestor : gestor)));
+        } catch (error) {
+            console.error('Error al actualizar el estado del gestor:', error.response?.data || error.message);
+        }
+    };
+
     return (
-        <div>
+        <div className="SUBELO">
             <div className="header">
-                <h2>Gestores de Ventas</h2>
-                <button className="new-gestor-button" onClick={() => { resetForm(); setShowForm(true); }}>
-                    {showForm ? 'Cancelar' : 'Nuevo Gestor'}
+                <h2>Gestores Almacen</h2>
+                <button className="new-gestor-button" onClick={() => { resetForm(); setShowModal(true); }}>
+                    {showModal ? 'Cancelar' : 'Nuevo Gestor'}
                 </button>
             </div>
-            {showForm && (
-                <form onSubmit={handleSubmit}>
+
+            <div className="filter-and-buttons">
+                <div className="button-group">
+                    <button className="view-button" onClick={() => setViewMode('verGestores')}>Ver Gestores</button>
+                    <button className="active-button" onClick={() => setViewMode('gestoresActivos')}>Gestores Activos</button>
+                    <button className="inactive-button" onClick={() => setViewMode('gestoresInactivos')}>Gestores Inactivos</button>
                     <input
                         type="text"
-                        placeholder="Nombre"
-                        value={nuevoGestor.name}
-                        onChange={(e) => setNuevoGestor({ ...nuevoGestor, name: e.target.value })}
-                        required
+                        placeholder="Filtrar por nombre"
+                        value={filters.nombre}
+                        onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
+                        className="filter-input"
                     />
-                    <input
-                        type="email"
-                        placeholder="Correo"
-                        value={nuevoGestor.email}
-                        onChange={(e) => setNuevoGestor({ ...nuevoGestor, email: e.target.value })}
-                        required
-                    />
-                    <input
-                        type="password"
-                        placeholder="Contraseña"
-                        value={nuevoGestor.password}
-                        onChange={(e) => setNuevoGestor({ ...nuevoGestor, password: e.target.value })}
-                        required
-                    />
-                    <button type="submit">{isEditing ? 'Actualizar' : 'Crear'}</button>
-                </form>
-            )}
-            <input
-                type="text"
-                placeholder="Filtrar por nombre"
-                value={filters.nombre}
-                onChange={(e) => setFilters({ ...filters, nombre: e.target.value })}
-            />
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Email</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {filteredUsuarios.map((usuario) => (
-                        <tr key={usuario.id}>
-                            <td>{usuario.name}</td>
-                            <td>{usuario.email}</td>
-                            <td>
-                                <button onClick={() => handleEditGestorClick(usuario)}>Editar</button>
-                                <button onClick={() => deleteGestor(usuario.id)}>Eliminar</button>
-                            </td>
+                </div>
+            </div>
+
+            {viewMode === 'verGestores' && (
+                <table className="usuarios-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Email</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
                         </tr>
+                    </thead>
+                    <tbody>
+                        {filteredUsuarios.map((usuario) => (
+                            <tr key={usuario.id} className="usuario-row">
+                                <td>{usuario.name}</td>
+                                <td>{usuario.email}</td>
+                                <td>{usuario.estado}</td>
+                                <td>
+                                    <button onClick={() => handleEditGestorClick(usuario)}>Editar</button>
+                                    <button onClick={() => deleteGestor(usuario.id)}>Eliminar</button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            )}
+
+            {viewMode === 'gestoresActivos' && (
+                <div className="gestores-activos">
+                    {activos.map(gestor => (
+                        <div className="gestor-card" key={gestor.id}>
+                            <h3>{gestor.name}</h3>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={gestor.estado === 'Activo'}
+                                    onChange={() => handleToggleState(gestor)}
+                                />
+                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                            </label>
+                        </div>
                     ))}
-                </tbody>
-            </table>
+                </div>
+            )}
+
+            {viewMode === 'gestoresInactivos' && (
+                <div className="gestores-inactivos">
+                    {inactivos.map(gestor => (
+                        <div className="gestor-card" key={gestor.id}>
+                            <h3>{gestor.name}</h3>
+                            <label>
+                                <input
+                                    type="checkbox"
+                                    checked={gestor.estado === 'Inactivo'}
+                                    onChange={() => handleToggleState(gestor)}
+                                />
+                                {gestor.estado === 'Activo' ? 'Activo' : 'Inactivo'}
+                            </label>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            {/* Modal para el formulario */}
+            {showModal && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={resetForm}>&times;</span>
+                        <form onSubmit={handleSubmit} className="gestor-form">
+                            <div className="form-group">
+                                <label htmlFor="name" className="form-label">Nombre</label>
+                                <input
+                                    type="text"
+                                    id="name"
+                                    placeholder="Nombre"
+                                    value={nuevoGestor.name}
+                                    onChange={(e) => setNuevoGestor({ ...nuevoGestor, name: e.target.value })}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="email" className="form-label">Correo</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    placeholder="Correo"
+                                    value={nuevoGestor.email}
+                                    onChange={(e) => setNuevoGestor({ ...nuevoGestor, email: e.target.value })}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                            <div className="form-group">
+                                <label htmlFor="password" className="form-label">Contraseña</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    placeholder="Contraseña"
+                                    value={nuevoGestor.password}
+                                    onChange={(e) => setNuevoGestor({ ...nuevoGestor, password: e.target.value })}
+                                    required
+                                    className="form-input"
+                                />
+                            </div>
+                            <button type="submit" className="submit-button">
+                                {isEditing ? 'Actualizar Gestor' : 'Crear Gestor'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
-export default GestorVentas;
+export default Gestor_Ventas;
