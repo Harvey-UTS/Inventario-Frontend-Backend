@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../../../css/gestorai.css';
 
 const Gestor_Ventas = () => {
     const [nuevoGestor, setNuevoGestor] = useState({
@@ -164,13 +165,13 @@ const Gestor_Ventas = () => {
                     {activos.map(gestor => (
                         <div className="gestor-card" key={gestor.id}>
                             <h3>{gestor.name}</h3>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={gestor.estado === 'activo'}
-                                    onChange={() => handleToggleState(gestor)}
+                            <label className="switch">
+                                <input 
+                                    type="checkbox" 
+                                    checked={gestor.estado === 'activo'}  // Switch encendido
+                                    onChange={() => handleToggleState(gestor)} 
                                 />
-                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
+                                <span className="slider"></span>
                             </label>
                         </div>
                     ))}
@@ -182,13 +183,13 @@ const Gestor_Ventas = () => {
                     {inactivos.map(gestor => (
                         <div className="gestor-card" key={gestor.id}>
                             <h3>{gestor.name}</h3>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={gestor.estado === 'inactivo'}
-                                    onChange={() => handleToggleState(gestor)}
+                            <label className="switch">
+                                <input 
+                                    type="checkbox" 
+                                    checked={gestor.estado === 'activo' ? true : false}  // Switch apagado
+                                    onChange={() => handleToggleState(gestor)} 
                                 />
-                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
+                                <span className="slider"></span>
                             </label>
                         </div>
                     ))}

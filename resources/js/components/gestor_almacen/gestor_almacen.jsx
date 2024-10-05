@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import '../../../css/gestor_almacen.css';
+import '../../../css/gestorai.css';
 
 const GestorAlmacen = () => {
     const [nuevoGestor, setNuevoGestor] = useState({
@@ -110,7 +111,7 @@ const GestorAlmacen = () => {
     };
 
     return (
-        <div className="SUBELOALMACEN">
+        <div className="SUBELO">
             <div className="header">
                 <h2>Gestores Almacen</h2>
                 <button className="new-gestor-button" onClick={() => { resetForm(); setShowModal(true); }}>
@@ -164,13 +165,13 @@ const GestorAlmacen = () => {
                     {activos.map(gestor => (
                         <div className="gestor-card" key={gestor.id}>
                             <h3>{gestor.name}</h3>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={gestor.estado === 'activo'}
-                                    onChange={() => handleToggleState(gestor)}
+                            <label className="switch">
+                                <input 
+                                    type="checkbox" 
+                                    checked={gestor.estado === 'activo'}  // Switch encendido
+                                    onChange={() => handleToggleState(gestor)} 
                                 />
-                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
+                                <span className="slider"></span>
                             </label>
                         </div>
                     ))}
@@ -182,13 +183,13 @@ const GestorAlmacen = () => {
                     {inactivos.map(gestor => (
                         <div className="gestor-card" key={gestor.id}>
                             <h3>{gestor.name}</h3>
-                            <label>
-                                <input
-                                    type="checkbox"
-                                    checked={gestor.estado === 'inactivo'}
-                                    onChange={() => handleToggleState(gestor)}
+                            <label className="switch">
+                                <input 
+                                    type="checkbox" 
+                                    checked={gestor.estado === 'activo' ? true : false}  // Switch apagado
+                                    onChange={() => handleToggleState(gestor)} 
                                 />
-                                {gestor.estado === 'activo' ? 'activo' : 'inactivo'}
+                                <span className="slider"></span>
                             </label>
                         </div>
                     ))}
