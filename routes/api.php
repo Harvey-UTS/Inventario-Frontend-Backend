@@ -7,6 +7,8 @@ use App\Http\Controllers\ComprasController;
 use App\Http\Controllers\ClientesController;
 use App\Http\Controllers\ProductosController;
 use App\Http\Controllers\ProveedoresController;
+use App\Http\Controllers\GestorVentasController;
+use App\Http\Controllers\GestorAlmacenController;
 use App\Http\Controllers\GestorComprasController;
 
 /*
@@ -39,3 +41,15 @@ Route::post('/gestores', [GestorComprasController::class, 'store']);
 Route::get('/gestores/{id}', [GestorComprasController::class, 'show']);
 Route::put('/gestores/{id}', [GestorComprasController::class, 'update']);
 Route::delete('/gestores/{id}', [GestorComprasController::class, 'destroy']);
+
+Route::get('/almacen', [GestorAlmacenController::class, 'index']);
+Route::post('/almacen', [GestorAlmacenController::class, 'store']);
+Route::get('/almacen/{id}', [GestorAlmacenController::class, 'show']);
+Route::put('/almacen/{id}', [GestorAlmacenController::class, 'update']);
+Route::delete('/almacen/{id}', [GestorAlmacenController::class, 'destroy']);
+
+Route::get('/ventas', [GestorVentasController::class, 'index']);
+Route::post('/ventas', [GestorVentasController::class, 'store']);
+Route::get('/ventas/{id}', [GestorVentasController::class, 'show']);
+Route::put('/ventas/{id}', [GestorVentasController::class, 'update']);
+Route::delete('/ventas/{id}', [GestorVentasController::class, 'destroy']);
